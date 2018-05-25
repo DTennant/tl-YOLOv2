@@ -120,7 +120,7 @@ def darknet(images, n_last_channels=425):
 	net = lambda_conv(net, [1, 1, 512, 256], 'conv5_4')
 	net = lambda_bn(net, 'conv5_4_bn')
 	net = lambda_pad(net, 'pad9')
-	net	= lambda_conv(net, [3, 3, 256, 512], 'conv5_5')
+	net = lambda_conv(net, [3, 3, 256, 512], 'conv5_5')
 	net = lambda_bn(net, 'conv5_5_bn')
 	short_cut = net
 	net = lambda_max_pool(net, 'pool5')
@@ -140,7 +140,7 @@ def darknet(images, n_last_channels=425):
 	net = lambda_bn(net, 'conv6_5_bn')
 	# conv7
 	net = lambda_pad(net, 'pad13')
-	net	= lambda_conv(net, [3, 3, 1024, 1024], 'conv7_1')
+	net = lambda_conv(net, [3, 3, 1024, 1024], 'conv7_1')
 	net = lambda_bn(net, 'conv7_1_bn')
 	net = lambda_pad(net, 'pad14')
 	net = lambda_conv(net, [3, 3, 1024, 1024], 'conv7_2')
