@@ -23,3 +23,8 @@ python main.py --input_img data/before.jpg --model_path pretrained/tl-yolov2.ckp
 4. Result:
 ![before](https://raw.githubusercontent.com/DTennant/tl-YOLOv2/master/data/before.jpg)
 ![after](https://raw.githubusercontent.com/DTennant/tl-YOLOv2/master/data/after.jpg)
+
+## TODO:
+
+- Add Training phase, See [this issue](https://github.com/tensorlayer/tensorlayer/issues/435)
+- Change PassThroughLayer and MyConcatLayer into proper tensorlayer layers

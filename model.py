@@ -148,13 +148,8 @@ def darknet(images, n_last_channels=425):
 
 	short_cut = lambda_conv(short_cut, [1, 1, 512, 64], 'conv_shortcut')
 	short_cut = lambda_bn(short_cut, 'conv_shortcut_bn')
+	# TODO: change PassThroughLayer and MyConcatLayer into proper tensorlayer layers
 	short_cut = PassThroughLayer(short_cut, 2)
-	# def reorg(x,stride):
-	#	 return tf.space_to_depth(x,block_size=stride)
-#	print('net.outputs shape: ', net.outputs.shape)
-#	print('short_cut shape: ', short_cut.outputs.shape)
-#	net = tf.concat([short_cut.outputs, net.outputs], axis=-1)
-#	print(net.shape)
 	net = MyConcatLayer([short_cut, net], concat_dim=-1, name='concat')
 	# conv8
 	net = lambda_pad(net, 'pad15')
@@ -168,12 +163,6 @@ def darknet(images, n_last_channels=425):
 def test():
 	x = tf.random_normal([1, 416, 416, 3])
 	model = darknet(x)
-#	print('all_layers:', len(model.all_layers))
-#	for i in model.all_layers:
-#		print(i)
-#	print('\nall_params:', len(model.all_params))
-#	for i in model.all_params:
-#		print(i.name, i.shape)
 	saver = tf.train.Saver()
 	with tf.Session() as sess:
 		saver.restore(sess, "./after/tl-yolov2.ckpt")
