@@ -2,7 +2,7 @@ import tensorflow as tf
 import tensorlayer as tl
 from tensorlayer.layers import *
 
-lambda_conv =lambda net, shape_, name_: Conv2dLayer(net, act=tf.identity, shape=shape_, padding='VALID', b_init=None, name=name_)
+lambda_conv = lambda net, shape_, name_: Conv2dLayer(net, act=tf.identity, shape=shape_, padding='VALID', b_init=None, name=name_)
 lambda_bn = lambda net, name_: BatchNormLayer(net, act=lambda x: tl.act.lrelu(x, 0.1), is_train=False, name=name_)
 lambda_pad = lambda net, name_: PadLayer(net, [[0, 0], [1, 1], [1, 1], [0, 0]], name=name_)
 lambda_max_pool = lambda net, name_: MaxPool2d(net, filter_size=(2, 2), strides=(2, 2), padding='VALID', name=name_)
@@ -165,7 +165,7 @@ def test():
 	model = darknet(x)
 	saver = tf.train.Saver()
 	with tf.Session() as sess:
-		saver.restore(sess, "./after/tl-yolov2.ckpt")
+		saver.restore(sess, "./pretrained/tl-yolov2.ckpt")
 		print(sess.run(model.outputs).shape) # (1,13,13,425)
 
 if __name__ == '__main__':

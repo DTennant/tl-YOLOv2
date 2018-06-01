@@ -3,11 +3,11 @@ A tensorlayer implementation of [YOLOv2](http://pjreddie.com/darknet/yolo/)
 
 ## Environment
 
-- python 3.5.2
+- python 3.6 or 3.5
 - Anaconda 4.2.0
 - tensorlayer 1.7.4
-- tensorflow 1.4.1
-- opencv-python 3.4.0
+- tensorflow 1.4.1 or 1.4.0
+- opencv-python 3.4.*
 
 ## Usage
 
