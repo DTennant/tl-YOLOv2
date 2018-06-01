@@ -17,7 +17,8 @@ A tensorlayer implementation of [YOLOv2](http://pjreddie.com/darknet/yolo/)
 
 3. Run the following commend to interference, you can change the input image if you want to:
 ```bash
-python main.py --input_img data/before.jpg --model_path pretrained/tl-yolov2.ckpt --output_img data/after.jpg
+python main.py --run_mode image --input_img data/before.jpg --output_img data/after.jpg -
+-model_path pretrained/tl-yolov2.ckpt
 ```
 
 4. Result:
@@ -26,7 +27,6 @@ python main.py --input_img data/before.jpg --model_path pretrained/tl-yolov2.ckp
 
 ## TODO:
 
-- Add Video processing in a OOP style
-- Disable the output by TensorLayer(the '[TL]' thing is really not my taste) by reassign `sys.stdout` to some class with method `write()` and change back once the computation graph is build
+- Upload a video result
 - Add Training phase, See [this issue](https://github.com/tensorlayer/tensorlayer/issues/435)
 - Change PassThroughLayer and MyConcatLayer into proper tensorlayer layers

@@ -1,43 +1,61 @@
-import numpy as np
 import cv2
-import utils
-from config import class_names, anchors
+import sys
+import argparse
+import numpy as np
+from time import time
 import tensorflow as tf
 from model import darknet
-import argparse
+from config import class_names, anchors
+from processor import frame_processor
 
 def get_parser():
 	parser = argparse.ArgumentParser()
+	parser.add_argument('--run_mode', type=str, choices=['video', 'image'], help='the mode will be video or image')
+	parser.add_argument('--input_video', type=str, help='the video to be processed, default: capture from the Camera(if available)')
+	parser.add_argument('--output_video', type=str, help='the path to save the video, default: play on the screen(not saving)')
 	parser.add_argument('--input_img', type=str, help='the image to be processed')
-	parser.add_argument('--model_path', type=str, help='the path to the model ckpt')
 	parser.add_argument('--output_img', type=str, help='the path to save the output img')
+	parser.add_argument('--model_path', type=str, help='the path to the model ckpt')
 	return parser
+
+def process_img(args):
+	img = cv2.imread(args.input_img)
+	processor = frame_processor(args.model_path)
+	start_time = time()
+	output_img = processor.process(img)
+	cv2.imwrite(args.output_img, output_img)
+	end_time = time()
+	print('YOLOv2 detection done!!!, takes {} seconds'.format(end_time - start_time))
+
+def process_video(args, processor):
+	cap = cv2.VideoCapture(args.input_video)
+	fourcc = cv2.VideoWriter_fourcc(*'XVID')
+	start_time = time()
+	ret, frame = cap.read()
+	frame_shape = frame.shape[:2]
+	out = cv2.VideoWriter(args.output_video, fourcc, 24.0, frame_shape)
+	while ret:
+		frame = processor.process(frame)
+		out.write(frame)
+		ret, frame = cap.read()
+	cap.release()
+	out.release()
+	cv2.destroyAllWindows()
+	end_time = time()
+	print('YOLOv2 detection done!!!, takes {} seconds'.format(end_time - start_time))
 
 def main():
 	parser = get_parser()
 	args = parser.parse_args()
-	input_size = (416, 416)
-	image = cv2.imread(args.input_img)
-	image_shape = image.shape[:2]
-	image_cp = utils.preprocess(image, input_size)
-
-	img_placeholder = tf.placeholder(tf.float32, shape=[1, input_size[0], input_size[1], 3])
-	model = darknet(img_placeholder)
-	output_size = (input_size[0] // 32, input_size[1] // 32)
-	output_decoded = utils.decode(model.outputs, output_sizes=output_size,
-									num_class=len(class_names), anchors=anchors)
-
-	saver = tf.train.Saver()
-	with tf.Session() as sess:
-		saver.restore(sess, args.model_path)
-		bboxes, obj_probs, class_probs = sess.run(output_decoded, feed_dict={img_placeholder: image_cp})
-
-	bboxes, scores, class_max_index = utils.postprocess(bboxes, obj_probs, class_probs, 
-														image_shape=image_shape)
-
-	output_img = utils.draw_detection(image, bboxes, scores, class_max_index, class_names)
-	cv2.imwrite(args.output_img, output_img)
-	print('YOLOv2 detection done!!!')
+	if args.run_mode == 'image':
+		process_img(args)
+	else:
+		if not args.input_video: args.input_video = 0
+		if not args.output_video: 
+			sys.exit('Error: You Need to assign an output video')
+		else:
+			processor = frame_processor(args.model_path)
+			process_video(args, processor)
 
 if __name__ == '__main__':
 	main()
