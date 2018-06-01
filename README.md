@@ -26,5 +26,7 @@ python main.py --input_img data/before.jpg --model_path pretrained/tl-yolov2.ckp
 
 ## TODO:
 
+- Add Video processing in a OOP style
+- Disable the output by TensorLayer(the '[TL]' thing is really not my taste) by reassign `sys.stdout` to some class with method `write()` and change back once the computation graph is build
 - Add Training phase, See [this issue](https://github.com/tensorlayer/tensorlayer/issues/435)
 - Change PassThroughLayer and MyConcatLayer into proper tensorlayer layers
