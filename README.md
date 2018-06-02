@@ -17,8 +17,7 @@ A tensorlayer implementation of [YOLOv2](http://pjreddie.com/darknet/yolo/)
 
 3. Run the following commend to detect objects in an image, you can change the input image if you want to:
 ```bash
-python3 main.py --run_mode image --input_img data/before.jpg --output_img data/after.jpg -
--model_path pretrained/tl-yolov2.ckpt
+python3 main.py --run_mode image --input_img data/before.jpg --output_img data/after.jpg --model_path pretrained/tl-yolov2.ckpt
 ```
 
 For Video detection, run the following commend:
