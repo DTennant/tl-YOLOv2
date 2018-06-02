@@ -32,11 +32,16 @@ def process_video(args, processor):
 	fourcc = cv2.VideoWriter_fourcc(*'XVID')
 	start_time = time()
 	ret, frame = cap.read()
-	frame_shape = frame.shape[:2]
-	out = cv2.VideoWriter(args.output_video, fourcc, 24.0, frame_shape)
+	fps = cap.get(cv2.CAP_PROP_FPS)
+	size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+			int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+	out = cv2.VideoWriter(args.output_video, fourcc, fps, size)
+	num_frame = 1
 	while ret:
 		frame = processor.process(frame)
 		out.write(frame)
+		print('Frame No.{}'.format(num_frame))
+		num_frame += 1
 		ret, frame = cap.read()
 	cap.release()
 	out.release()

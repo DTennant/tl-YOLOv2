@@ -52,11 +52,17 @@ optional arguments:
 
 4. Result:
 
+Image Processing Result
+
 ![before](https://raw.githubusercontent.com/DTennant/tl-YOLOv2/master/data/before.jpg)
 ![after](https://raw.githubusercontent.com/DTennant/tl-YOLOv2/master/data/after.jpg)
 
+Video Processing Result (if you are in China, maybe you can't see it):
+
+[![Watch the video](https://raw.githubusercontent.com/DTennant/tl-YOLOv2/master/data/video.png)](http://youtu.be/bbWiJfV9XBI)
+
+
 ## TODO:
 
-- Upload a video result
 - Add Training phase, See [this issue](https://github.com/tensorlayer/tensorlayer/issues/435)
 - Change PassThroughLayer and MyConcatLayer into proper tensorlayer layers
