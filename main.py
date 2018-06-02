@@ -18,9 +18,8 @@ def get_parser():
 	parser.add_argument('--model_path', type=str, help='the path to the model ckpt')
 	return parser
 
-def process_img(args):
+def process_img(args, processor):
 	img = cv2.imread(args.input_img)
-	processor = frame_processor(args.model_path)
 	start_time = time()
 	output_img = processor.process(img)
 	cv2.imwrite(args.output_img, output_img)
@@ -52,14 +51,14 @@ def process_video(args, processor):
 def main():
 	parser = get_parser()
 	args = parser.parse_args()
+	processor = frame_processor(args.model_path)
 	if args.run_mode == 'image':
-		process_img(args)
+		process_img(args, processor)
 	else:
 		if not args.input_video: args.input_video = 0
 		if not args.output_video: 
 			sys.exit('Error: You Need to assign an output video')
 		else:
-			processor = frame_processor(args.model_path)
 			process_video(args, processor)
 
 if __name__ == '__main__':
