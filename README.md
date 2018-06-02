@@ -63,5 +63,6 @@ Video Processing Result (if you are in China, maybe you can't see it):
 
 ## TODO:
 
+- Add MobileNet to achieve real-time Detection on CPUs (My Machine is i5-7200u, which takes 1 second to process 1 frame)
 - Add Training phase, See [this issue](https://github.com/tensorlayer/tensorlayer/issues/435)
 - Change PassThroughLayer and MyConcatLayer into proper tensorlayer layers
