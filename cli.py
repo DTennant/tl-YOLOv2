@@ -8,6 +8,9 @@ from model import darknet
 from config import class_names, anchors
 from processor import frame_processor
 
+import logging 
+logging.getLogger("requests").setLevel(logging.ERROR)
+
 def get_parser():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--run_mode', type=str, choices=['video', 'image'], help='the mode will be video or image')

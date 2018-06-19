@@ -11,6 +11,9 @@ from PyQt5.QtWidgets import QAction, QFileDialog
 from PyQt5.QtWidgets import QMainWindow, QTextEdit
 from PyQt5.QtWidgets import QProgressBar, QApplication
 
+import logging 
+logging.getLogger("requests").setLevel(logging.ERROR)
+
 class YOLOAPP(QMainWindow):
 	def __init__(self):
 		super().__init__()
@@ -48,12 +51,10 @@ class YOLOAPP(QMainWindow):
 		self.show()
 
 	def timerEvent(self, e):
-		# TODO: Needs refactoring
 		if self.step >= 100:
 			self.timer.stop()
 			self.btn.setText('Finished')
 			return 
-		print(self.processed_file_type, self.processed_file)
 		# Do the work
 		if self.processed_file_type == 'jpg':
 			img = cv2.imread(self.processed_file)
@@ -65,30 +66,20 @@ class YOLOAPP(QMainWindow):
 			self.step = self.step + 100
 			self.pbar.setValue(self.step)	
 		else:
-			cap = cv2.VideoCapture(self.processed_file)
-			tot_frame = int(cap.get(cv2.CAP_PROP_FRAME_COUNT)) - 1
-			fourcc = cv2.VideoWriter_fourcc(*'XVID')
-			start_time = time()
-			ret, frame = cap.read()
-			fps = cap.get(cv2.CAP_PROP_FPS)
-			size = (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
-					int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-			out = cv2.VideoWriter('output_video.avi', fourcc, fps, size)
-			num_frame = 1
-			while ret:
-				frame = self.processor.process(frame)
-				out.write(frame)
-				self.statusBar().showMessage('Frame No.{} of {}'.format(num_frame, tot_frame))
-				num_frame += 1
-				self.step = int((float(num_frame) / float(tot_frame)) * 100) - 1
-				self.pbar.setValue(self.step)
-				ret, frame = cap.read()
-			cap.release()
-			out.release()
-			cv2.destroyAllWindows()
-			end_time = time()
-			self.statusBar().showMessage('YOLOv2 detection done!!!, takes {} seconds'.format(end_time - start_time))
-		
+			if self.processed_frame == 0: self.start_time = time()
+			ret, frame = self.cap.read()
+			if not ret:
+				self.timer.stop()
+				self.btn.setText('Finished')
+				end_time = time()
+				self.statusBar().showMessage('YOLOv2 detection done!!!, takes {} seconds'.format(end_time - self.start_time))
+				return
+			frame = self.processor.process(frame)
+			self.out.write(frame)
+			self.processed_frame += 1
+			self.statusBar().showMessage('Frame No.{} of {}'.format(self.processed_frame, self.tot_frame))
+			self.step = int((float(self.processed_frame) / float(self.tot_frame)) * 100)
+			self.pbar.setValue(self.step)
 
 	def doAction(self):
 		if self.processed_file == '':
@@ -108,6 +99,15 @@ class YOLOAPP(QMainWindow):
 		ftype = fname.split('.')[-1]
 		self.processed_file = fname
 		self.processed_file_type = 'jpg' if ftype == 'jpg' else 'avi'
+		if self.processed_file_type == 'avi':
+			self.cap = cv2.VideoCapture(self.processed_file)
+			self.tot_frame = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT)) - 1
+			fourcc = cv2.VideoWriter_fourcc(*'XVID')
+			fps = self.cap.get(cv2.CAP_PROP_FPS)
+			size = (int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+					int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+			self.out = cv2.VideoWriter('output_video.avi', fourcc, fps, size)
+			self.processed_frame = 0
 		return 
 
 def main():
