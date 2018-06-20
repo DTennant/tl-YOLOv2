@@ -1,0 +1,16 @@
+.
+├── pretrained/
+│   ├── checkpoint
+│   ├── tl-yolov2.ckpt.data-00000-of-00001
+│   ├── tl-yolov2.ckpt.index
+│   └── tl-yolov2.ckpt.meta
+├── data/
+│   ├── before.jpg
+│   ├── coco_classes.txt
+│   └── source.avi
+├── cli.py
+├── gui.py
+├── processor.py
+├── model.py
+├── config.py
+└── README.md

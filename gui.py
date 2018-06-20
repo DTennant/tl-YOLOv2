@@ -97,6 +97,10 @@ class YOLOAPP(QMainWindow):
 		fname, _ = QFileDialog.getOpenFileName(self, 'Open', os.getcwd(), 'Image files(*.jpg);;Video files(*.avi)')
 		# process the video or image
 		ftype = fname.split('.')[-1]
+		self.timer.stop()
+		self.btn.setText('Start')
+		self.step = 0
+		self.pbar.setValue(self.step)
 		self.processed_file = fname
 		self.processed_file_type = 'jpg' if ftype == 'jpg' else 'avi'
 		if self.processed_file_type == 'avi':
